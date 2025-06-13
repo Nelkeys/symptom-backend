@@ -1,23 +1,24 @@
-import json
+import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 import joblib
 
-# Load dataset from JSON
-with open("symptom_dataset.json") as f:
-    data = json.load(f)
+# Step 1: Load CSV
+df = pd.read_csv("symptom_dataset.csv")  # Replace with actual file name
 
-X, y = zip(*data)
+# Step 2: Extract input/output
+X = df["text"].values
+y = df["label"].values
 
-# Create pipeline
+# Step 3: Build Pipeline
 model = Pipeline([
     ('vectorizer', CountVectorizer()),
     ('classifier', MultinomialNB())
 ])
 
-# Train and save
+# Step 4: Train and Save
 model.fit(X, y)
 joblib.dump(model, 'symptom_model.joblib')
 
-print("✅ Large model trained and saved.")
+print("✅ Model trained and saved.")
